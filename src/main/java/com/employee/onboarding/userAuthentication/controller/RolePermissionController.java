@@ -29,8 +29,12 @@ public class RolePermissionController {
 	
 	@Autowired
     private RoleService roleService;
+	
+	private static final String CREATE_ROLE = "/create";
+	private static final String GET_BY_NAME = "/get/{name}";
+	private static final String DELETE_BY_NAME = "/delete/{name}";
 
-	@PostMapping("/create")
+	@PostMapping(value = CREATE_ROLE)
 	@Operation(summary = "Create a new role", description = "Create a new role in the system.")
     public ResponseEntity<Message> createRole(@ParameterObject @Valid RoleRequest roleRequest) {
         try {
@@ -46,7 +50,7 @@ public class RolePermissionController {
         }
     }
 	
-	@GetMapping("/get/{name}")
+	@GetMapping(value = GET_BY_NAME)
 	@Operation(summary = "Get a role by name", description = "Fetch role details using the role name.")
     public ResponseEntity<?> getRole(@PathVariable String name) {
         try {
@@ -61,7 +65,7 @@ public class RolePermissionController {
         }
     }
 	
-	@DeleteMapping("/delete/{name}")
+	@DeleteMapping(value = DELETE_BY_NAME)
 	@Operation(summary = "Delete a role by name", description = "Delete a role from the system.")
     public ResponseEntity<Message> deleteRole(@PathVariable String name) {
         try {
