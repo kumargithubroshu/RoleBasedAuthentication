@@ -160,7 +160,7 @@ public class TaskServiceImpl implements TaskService {
 	        throw new IllegalArgumentException("This task is already assigned to the specified user.");
 	    }
 
-	    task.setAssignedUser(user);
+	    task.getAssignedUser().add(user);
 	    taskRepo.save(task);
 	}
 }

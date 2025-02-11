@@ -1,6 +1,7 @@
 package com.employee.onboarding.userAuthentication.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.employee.onboarding.userAuthentication.enummeration.Priority;
 import com.employee.onboarding.userAuthentication.enummeration.TaskStatus;
@@ -14,6 +15,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -53,9 +56,13 @@ public class Task {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assigned_user_id")
-    private User assignedUser;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "task_users",
+        joinColumns = @JoinColumn(name = "task_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> assignedUser;
     
 //    @PrePersist
 //    public void prePersist() {
