@@ -60,7 +60,7 @@ public class TaskServiceImpl implements TaskService {
 		} catch (DateTimeParseException e) {
 			throw new IllegalArgumentException("Invalid due date format. Expected format: dd/MM/yyyy : HH:mm");
 		}
-		task.setStatus(TaskStatus.PENDING);
+		task.setStatus(TaskStatus.CREATED);
 		task.setPriority(taskRequest.getPriority());
 		task.setCreatedAt(LocalDateTime.now());
 
@@ -160,6 +160,7 @@ public class TaskServiceImpl implements TaskService {
 	        throw new IllegalArgumentException("This task is already assigned to the specified user.");
 	    }
 	    
+	    task.setStatus(TaskStatus.ASSIGNED);
 	    task.getAssignedUser().add(user);
 	    taskRepo.save(task);
 	}
