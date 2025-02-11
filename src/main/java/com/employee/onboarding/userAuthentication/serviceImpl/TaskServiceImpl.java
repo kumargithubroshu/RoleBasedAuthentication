@@ -159,7 +159,7 @@ public class TaskServiceImpl implements TaskService {
 	    if (task.getAssignedUser() != null && task.getAssignedUser().equals(user)) {
 	        throw new IllegalArgumentException("This task is already assigned to the specified user.");
 	    }
-
+	    
 	    task.getAssignedUser().add(user);
 	    taskRepo.save(task);
 	}
