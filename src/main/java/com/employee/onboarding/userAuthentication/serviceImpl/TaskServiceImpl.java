@@ -10,9 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.employee.onboarding.userAuthentication.entity.Role;
 import com.employee.onboarding.userAuthentication.entity.Task;
 import com.employee.onboarding.userAuthentication.entity.User;
 import com.employee.onboarding.userAuthentication.enummeration.Priority;
@@ -20,6 +22,7 @@ import com.employee.onboarding.userAuthentication.enummeration.TaskStatus;
 import com.employee.onboarding.userAuthentication.exception.TaskAlreadyExistsException;
 import com.employee.onboarding.userAuthentication.pojoRequest.TaskRequest;
 import com.employee.onboarding.userAuthentication.pojoResponse.TaskResponse;
+import com.employee.onboarding.userAuthentication.repository.RoleRepo;
 import com.employee.onboarding.userAuthentication.repository.TaskRepo;
 import com.employee.onboarding.userAuthentication.repository.UserRepo;
 import com.employee.onboarding.userAuthentication.service.TaskService;
@@ -34,6 +37,9 @@ public class TaskServiceImpl implements TaskService {
 	
 	@Autowired
 	private UserRepo userRepo;
+	
+	@Autowired
+	private RoleRepo roleRepo;
 
 	@Override
 	public void createTask(TaskRequest taskRequest) {
@@ -136,26 +142,26 @@ public class TaskServiceImpl implements TaskService {
     }
 	
 	@Override
-	public void assignTaskToUser(Long taskId, Long userId) throws IllegalAccessException {
-        Task task = taskRepo.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("Task with ID " + taskId + " not found"));
-        
-        User user = userRepo.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with ID " + userId + " not found"));
-        
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentRole = authentication.getAuthorities().toString();
-        
-        if (!currentRole.contains("ADMIN")) {
-            throw new IllegalAccessException("Only users with the ADMIN role can assign tasks.");
-        }
+	public void assignTaskToUser(Long taskId, Long userId, Long adminId) throws IllegalAccessException {
+	    // Fetch Task
+	    Task task = taskRepo.findById(taskId)
+	            .orElseThrow(() -> new IllegalArgumentException("Task with ID " + taskId + " not found"));
 
-        if (task.getAssignedUser() != null && task.getAssignedUser().equals(user)) {
-            throw new IllegalArgumentException("This task is already assigned to the specified user.");
-        }
+	    User user = userRepo.findById(userId)
+	            .orElseThrow(() -> new IllegalArgumentException("User with ID " + userId + " not found"));
 
-        task.setAssignedUser(user);
+	    User admin = userRepo.findById(adminId)
+	            .orElseThrow(() -> new IllegalArgumentException("Admin with ID " + adminId + " not found"));
 
-        taskRepo.save(task);
-    }
+	    if (!"ADMIN".equalsIgnoreCase(admin.getRole().getName())) {
+	        throw new IllegalAccessException("Only users with the ADMIN role can assign tasks.");
+	    }
+
+	    if (task.getAssignedUser() != null && task.getAssignedUser().equals(user)) {
+	        throw new IllegalArgumentException("This task is already assigned to the specified user.");
+	    }
+
+	    task.setAssignedUser(user);
+	    taskRepo.save(task);
+	}
 }

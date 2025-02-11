@@ -23,6 +23,6 @@ public interface TaskService {
 	
 	public void deleteTask(Long taskId);
 	
-	public void assignTaskToUser(Long taskId, Long userId) throws IllegalAccessException;
+	public void assignTaskToUser(Long taskId, Long userId, Long adminId) throws IllegalAccessException;
 
 }

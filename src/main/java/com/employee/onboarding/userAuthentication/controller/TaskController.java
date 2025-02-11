@@ -45,7 +45,7 @@ public class TaskController {
 	private static final String GET_TASK_BY_STATUS = "/get/status";
 	private static final String GET_TASK_BY_PRIORITY = "/get/priority";
 	private static final String DELETE_TASK_BY_TASK_ID = "/delete/{taskId}";
-	private static final String ASSIGN_TASK_TO_USER = "/assign/{taskId}/{userId}";
+	private static final String ASSIGN_TASK_TO_USER = "/assign/{taskId}/{userId}/{adminId}";
 
 	@Operation(summary = "Create task for user")
 	@PostMapping(value = CREATE_TASK)
@@ -158,11 +158,11 @@ public class TaskController {
 	@Operation(summary = "Assign task to user")
 	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping(value = ASSIGN_TASK_TO_USER)
-	public ResponseEntity<Message> assignTaskToUser(@PathVariable Long taskId, @PathVariable Long userId)
+	public ResponseEntity<Message> assignTaskToUser(@PathVariable Long taskId, @PathVariable Long userId , @PathVariable Long adminId)
 			throws Exception {
 		log.info("Received request to assign task with ID: {} to user with ID: {}", taskId, userId);
 		try {
-			taskService.assignTaskToUser(taskId, userId);
+			taskService.assignTaskToUser(taskId, userId, adminId);
 			log.info("Task with ID: {} successfully assigned to user with ID: {}", taskId, userId);
 			return ResponseEntity.status(HttpStatus.OK).body(new Message("Task successfully assigned to user"));
 		} catch (IllegalAccessException e) {
