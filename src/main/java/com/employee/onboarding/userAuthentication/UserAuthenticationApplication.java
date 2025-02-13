@@ -21,4 +21,4 @@ public class UserAuthenticationApplication {
 	}
 }
 
-//http://localhost:8080/swagger-ui/index.html
+//http://localhost:8082/swagger-ui/index.html

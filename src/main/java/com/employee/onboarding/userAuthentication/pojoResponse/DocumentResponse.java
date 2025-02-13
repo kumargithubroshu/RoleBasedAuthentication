@@ -9,20 +9,22 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+
 
 public class DocumentResponse {
-    private Long documentId;
+    //private Long documentId;
     //private Long userId;
     private String documentName;
-    private String documentPath;
-    private LocalDateTime uploadedAt;
+    //private String documentPath;
+    //private LocalDateTime uploadedAt;
+
+	public DocumentResponse(String documentName) {
+		
+		this.documentName = documentName;
+	}
     
-    public DocumentResponse(Document document) {
-        this.documentId = document.getDocumentId();
-        this.documentName = document.getDocumentName();
-        this.documentPath = document.getDocumentPath();
-        this.uploadedAt = document.getUploadedAt();
-    }
+    
+   
+   
 }
 
